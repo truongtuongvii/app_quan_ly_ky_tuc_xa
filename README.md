@@ -67,3 +67,4 @@ npx react-native run-android
 - Trương Tường Vi & Văn Nin – Backend & Mobile App
 - Trương Tường Vi – Frontend
 
+
