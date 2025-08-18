@@ -1,4 +1,4 @@
-# Student Dormitory Management System (Mobile App)
+# Hệ thống quản lý ký túc xá sinh viên (Ứng dụng di động)
 Ứng dụng quản lý ký túc xá sinh viên với backend Django REST Framework và frontend React Native.
 
 ## 📌 Giới thiệu
@@ -66,3 +66,4 @@ npx react-native run-android
 ## 👩‍💻 Thành viên
 - Trương Tường Vi & Văn Nin – Backend & Mobile App
 - Trương Tường Vi – Frontend
+
