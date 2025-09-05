@@ -7,7 +7,7 @@ import { endpoints } from "../../configs/Apis";
 import axiosInstance from "../../configs/AxiosInterceptor";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import OTPInput from '../User/OTPInput';
-import { API_KEY } from '@env';
+import { API_KEY, BASE_URL } from '@env';
 import styles from './StyleChangePassword';
 
 const OTP_TIMEOUT = 60;
@@ -38,10 +38,14 @@ const ChangePassword = () => {
     const [timer, setTimer] = useState(OTP_TIMEOUT);
     const timerRef = useRef(null);
 
+
+
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
                 const token = await AsyncStorage.getItem('token');
+                console.log("Token hiện tại:", token);
+                console.log("URL:", `${BASE_URL}${endpoints.user_me}`);
                 if (!token) return;
 
                 const res = await axiosInstance.get(endpoints.user_me);
@@ -50,7 +54,14 @@ const ChangePassword = () => {
                     setIsFirstLogin(res.data.is_first_login || false);
                 }
             } catch (error) {
-                console.error('Lỗi khi lấy thông tin user:', error);
+                console.error("user_me error:", error);
+                if (error.response) {
+                    console.log("Lỗi response:", error.response.data);
+                } else if (error.request) {
+                    console.log("Không có phản hồi");
+                } else {
+                    console.log("Lỗi khác:", error.message);
+                }
             }
         };
 
@@ -185,9 +196,12 @@ const ChangePassword = () => {
                 const token = await AsyncStorage.getItem('token');
                 if (!token) throw new Error('Không tìm thấy token');
 
+                console.log("API_KEY:", API_KEY);
+
                 await axiosInstance.post(endpoints.changePassword, { new_password: newPassword }, {
                     headers: { 'x-api-key': API_KEY }
                 });
+
 
                 Alert.alert('Thành công', 'Mật khẩu đã được cập nhật', [
                     {
@@ -198,6 +212,11 @@ const ChangePassword = () => {
             } catch (error) {
                 console.error(error);
                 Alert.alert('Lỗi', 'Không thể đổi mật khẩu. Vui lòng thử lại.');
+                if (error.response) {
+                    console.error("Response data:", error.response.data);
+                } else {
+                    console.error("Không có phản hồi:", error.message);
+                }
             } finally {
                 setLoading(false);
             }

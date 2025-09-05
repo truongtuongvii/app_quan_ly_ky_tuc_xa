@@ -4,7 +4,7 @@ import { Button, HelperText, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Apis, { endpoints } from "../../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CLIENT_ID, CLIENT_SECRET } from '@env';
+import { CLIENT_ID, CLIENT_SECRET, BASE_URL } from '@env';
 import Styles from "./Style";
 
 const Login = () => {
@@ -94,8 +94,15 @@ const Login = () => {
             }
 
         } catch (ex) {
-            console.error("Login error:", ex.response?.data || ex.message);
-            setMsg("Sai thông tin đăng nhập hoặc lỗi máy chủ!");
+            if (ex.response) {
+                console.error("❌ Response error:", ex.response.data);
+            } else if (ex.request) {
+                console.error("❌ No response received:", ex.request);
+            } else {
+                console.error("❌ Error setting up request:", ex.message);
+            }
+
+            setMsg("Sai thông tin đăng nhập hoặc lỗi mạng!");
         } finally {
             setLoading(false);
         }

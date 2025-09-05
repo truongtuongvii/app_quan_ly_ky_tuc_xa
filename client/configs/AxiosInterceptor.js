@@ -3,10 +3,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL, CLIENT_ID, CLIENT_SECRET } from "@env";
 import { endpoints } from "./Apis";
 
+console.log("🧪 axiosInstance BASE_URL:", BASE_URL);
+
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 20000,
 });
+
 
 let isRefreshing = false;
 let failedQueue = [];

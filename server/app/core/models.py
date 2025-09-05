@@ -6,6 +6,7 @@ from django.conf import settings
 from django.utils import timezone
 from cloudinary.models import CloudinaryField
 import cloudinary
+import cloudinary.uploader
 import qrcode
 from io import BytesIO
 from django.core.files.base import ContentFile
@@ -232,34 +233,24 @@ class QRCode(models.Model):
     qr_token = models.CharField(max_length=36, unique=True, default=uuid.uuid4)
     date = models.DateField(default=timezone.now)
     is_used = models.BooleanField(default=False)
-    image_url = CloudinaryField(blank=True, null=True)
+    image_url = CloudinaryField('image', blank=True, null=True)
     
     class Meta:
         unique_together = ('date',)
-    
+
     def save(self, *args, **kwargs):
-        if not self.image_url: 
+        if not self.image_url:
             qr = qrcode.QRCode(version=1, box_size=10, border=5)
             qr.add_data(self.qr_token)
             qr.make(fit=True)
-            img = qr.make_image(fill='black', back_color='white')
-            
+            img = qr.make_image(fill_color='black', back_color='white')
+
             buffer = BytesIO()
             img.save(buffer, format='PNG')
             buffer.seek(0)
-            
-            try:
-                file_name = f"qrcode_{self.qr_token}"
-                response = cloudinary.uploader.upload(
-                    buffer,
-                    folder='qrcodes',
-                    public_id=file_name,
-                    resource_type='image'
-                )
-                self.image_url = response['public_id'] 
-            except Exception as e:
-                raise ValueError(f"Lỗi khi upload lên Cloudinary: {str(e)}")
-        
+
+            self.image_url = buffer
+
         super().save(*args, **kwargs)
         
     def get_image_url(self):

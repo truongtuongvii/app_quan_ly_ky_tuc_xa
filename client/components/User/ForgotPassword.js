@@ -71,6 +71,9 @@ const ForgotPassword = () => {
         Keyboard.dismiss();
         setLoading(true);
 
+        console.log("🔐 API_KEY gửi lên:", API_KEY);
+
+
         try {
             await axiosInstance.post(endpoints.requestOtp, { email: trimmedEmail }, {
                 headers: { 'x-api-key': API_KEY }

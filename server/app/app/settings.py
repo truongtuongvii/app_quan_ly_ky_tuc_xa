@@ -11,29 +11,37 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
-import openai
 import os
+from decouple import Config, RepositoryEnv
+import openai
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load .env file manually
+ENV_FILE = os.path.join(BASE_DIR, '.env')
+config = Config(RepositoryEnv(ENV_FILE))
+
 DEBUG = config('DEBUG_MODE', default=False, cast=bool)
 SECRET_KEY = config('SECRET_KEY', cast=str)
 ALLOWED_HOSTS = ['*']
-MY_DOMAIN = "www.pythonanywhere.com"
-# MY_DOMAIN = "8c5f-2402-800-63a7-95fc-71db-2a62-99f8-8dc2.ngrok-free.app"
+MY_DOMAIN = config('MY_DOMAIN')
 
 AUTH_USER_MODEL = 'core.User'
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 import cloudinary
 
 cloudinary.config(
-    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
-    api_key=config('CLOUDINARY_API_KEY'),
-    api_secret=config('CLOUDINARY_API_SECRET'),
+    cloud_name="dywyrpfw7",
+    api_key="939321463538976",
+    api_secret="qHVNlRhXg_WdaP9AAhNC0kEccJnk",
     secure=True
 )
+
+
 
 INSTALLED_APPS = [
     'daphne',
@@ -56,6 +64,7 @@ INSTALLED_APPS = [
     'channels',
     'drf_yasg',
     'django.contrib.humanize',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +76,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -178,7 +188,7 @@ JET_APP_INDEX_DASHBOARD = 'jet.dashboard.dashboard.DefaultAppIndexDashboard'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-OPENAI_API_KEY = config('OPENAI_API_KEY')
+#OPENAI_API_KEY = config('OPENAI_API_KEY')
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
@@ -192,8 +202,11 @@ CKEDITOR_CONFIGS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dormitorydb',
+        'USER': 'root',
+        'PASSWORD': 'admin@123',
+        'HOST': ''
     }
 }
 
@@ -260,6 +273,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CLIENT_ID = 'ltfXMk4dMHw5Nf4ftDx5Jpr49OoxH0rMJ9rCf8X3',
-CLIENT_SECRET = '2GpfrO6XBVCiK5tdSFXWtmMXNPhOC1Q5VR5AcHeCDfoQPqUAJGEXe9hd1yytqMDtjhfjPLu0JyGOqTK40swSxG9FwivoHYRonxFNUV5ADqIihcirJQgHbpyXrZ74pmIJ',

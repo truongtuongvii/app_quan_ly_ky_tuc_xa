@@ -156,7 +156,7 @@ const ExtensionsServiceSurveyDetail = () => {
                                             <View key={num} style={styles.radioItem}>
                                                 <RadioButton
                                                     value={num.toString()}
-                                                    status={answers[q.id] === num ? "checked" : "unchecked"}
+                                                    status={answers[q.id] === num.toString() ? "checked" : "unchecked"}
                                                     onPress={() => handleAnswerChange(q.id, num.toString())}
                                                 />
                                                 <Text>{num}</Text>

@@ -3,6 +3,7 @@ import { BASE_URL } from "@env";
 
 
 export const endpoints = {
+    
     'login': '/o/token/',
     'requestOtp': '/api/request-otp/',
     'verifyOtp': '/api/verify-otp/',
